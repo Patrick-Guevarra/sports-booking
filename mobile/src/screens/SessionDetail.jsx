@@ -2,6 +2,7 @@ import { View, Text, Button, Alert } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { money, niceType } from '../constants/format';
 import { MOCK_SESSIONS } from '../constants/mockData';
+import FloatingChatButton from '../components/FloatingChatButton';
 
 export default function SessionDetail({ route, navigation }) {
   const { sessionId } = route.params || {};
@@ -16,7 +17,6 @@ export default function SessionDetail({ route, navigation }) {
   }
 
   const onBook = () => {
-    // Later: POST /api/bookings
     Alert.alert('Booking', `Created booking for ${session.sport} (${niceType(session.type)})`);
   };
 
@@ -30,8 +30,8 @@ export default function SessionDetail({ route, navigation }) {
 
       <View style={{ height: 16 }} />
       <Button title="Book (Simulated)" onPress={onBook} />
-      <View style={{ height: 12 }} />
-      <Button title="Ask AI" onPress={() => navigation.navigate('Chat')} />
+
+      <FloatingChatButton onPress={() => navigation.navigate('Chat')} />
     </View>
   );
 }

@@ -3,12 +3,13 @@ import { View, FlatList, ActivityIndicator } from 'react-native';
 import { COLORS } from '../constants/colors';
 import SessionCard from '../components/SessionCard';
 import { MOCK_SESSIONS } from '../constants/mockData';
+import FloatingChatButton from '../components/FloatingChatButton';
 
 export default function SessionsList({ navigation }) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => setData(MOCK_SESSIONS), 250); // tiny delay to show spinner
+    setTimeout(() => setData(MOCK_SESSIONS), 250);
   }, []);
 
   if (!data) {
@@ -30,7 +31,9 @@ export default function SessionsList({ navigation }) {
             onPress={() => navigation.navigate('SessionDetail', { sessionId: item.id })}
           />
         )}
+        contentContainerStyle={{ paddingBottom: 100 }} // avoid FAB overlap on last card
       />
+      <FloatingChatButton onPress={() => navigation.navigate('Chat')} />
     </View>
   );
 }

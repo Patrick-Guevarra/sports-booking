@@ -1,5 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
+import FloatingChatButton from '../components/FloatingChatButton';
 
 export default function Home({ navigation }) {
   return (
@@ -16,13 +17,15 @@ export default function Home({ navigation }) {
         <Text style={{ color: COLORS.muted, marginTop: 4 }}>Find group or 1-on-1 training</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Chat')}
-        style={{ backgroundColor: COLORS.card, borderColor: COLORS.border, borderWidth: 1, borderRadius: 14, padding: 16 }}
-      >
-        <Text style={{ fontWeight: '700', color: COLORS.text }}>Ask the AI Assistant</Text>
-        <Text style={{ color: COLORS.muted, marginTop: 4 }}>Pricing, booking, and policy help</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => navigation.navigate('Bookings')}
+            style={{ backgroundColor: COLORS.card, borderColor: COLORS.border, borderWidth: 1, borderRadius: 14, padding: 16, marginBottom: 12 }}>
+            <Text style={{ fontWeight: '700', color: COLORS.text }}>My Bookings</Text>
+            <Text style={{ color: COLORS.muted, marginTop: 4 }}>See upcoming and past sessions</Text>
+        </TouchableOpacity>
+      
+      {/* Floating AI button */}
+      <FloatingChatButton onPress={() => navigation.navigate('Chat')} />
     </View>
   );
 }

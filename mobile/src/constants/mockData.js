@@ -23,4 +23,32 @@ export const MOCK_SESSIONS = [
     capacity: 6,
     status: 'open'
   }
+
+  
 ];
+
+export const MOCK_BOOKINGS = [
+  {
+    id: 101,
+    sessionId: 1,
+    sport: 'basketball',
+    type: 'one_on_one',
+    coachName: 'Jordan Dasher',
+    startTime: '2025-11-01T10:00:00Z',
+    durationMinutes: 60,
+    priceCents: 6000,
+    status: 'confirmed' // 'pending' | 'confirmed' | 'completed' | 'canceled'
+  },
+  {
+    id: 102,
+    sessionId: 2,
+    sport: 'volleyball',
+    type: 'group',
+    coachName: 'Jordan Dasher',
+    startTime: '2025-11-03T18:00:00Z',
+    durationMinutes: 90,
+    priceCents: 3000,
+    status: 'pending'
+  }
+];
+
