@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView } from 'react-native';
-import { COLORS } from '../constants/colors';
+import { COLORS } from '../../constants/colors';
 
 export default function Chat() {
   const [messages, setMessages] = useState([{ from:'ai', text:'Hi! Ask me about pricing, booking, or policies.' }]);

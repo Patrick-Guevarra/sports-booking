@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { View, FlatList, RefreshControl, Text } from 'react-native';
-import { COLORS } from '../constants/colors';
-import { MOCK_BOOKINGS } from '../constants/mockData';
-import BookingCard from '../components/BookingCard';
+import { COLORS } from '../../constants/colors';
+import { MOCK_BOOKINGS } from '../../constants/mockData';
+import BookingCard from '../../components/BookingCard';
 
 export default function Bookings() {
   const [data, setData] = useState(MOCK_BOOKINGS);

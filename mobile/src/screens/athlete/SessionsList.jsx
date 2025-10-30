@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
-import { COLORS } from '../constants/colors';
-import SessionCard from '../components/SessionCard';
-import { MOCK_SESSIONS } from '../constants/mockData';
-import FloatingChatButton from '../components/FloatingChatButton';
+import { COLORS } from '../../constants/colors';
+import SessionCard from '../../components/SessionCard';
+import { MOCK_SESSIONS } from '../../constants/mockData';
+import FloatingChatButton from '../../components/FloatingChatButton';
 
 export default function SessionsList({ navigation }) {
   const [data, setData] = useState(null);

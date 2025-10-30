@@ -1,8 +1,8 @@
 import { View, Text, Button, Alert } from 'react-native';
-import { COLORS } from '../constants/colors';
-import { money, niceType } from '../constants/format';
-import { MOCK_SESSIONS } from '../constants/mockData';
-import FloatingChatButton from '../components/FloatingChatButton';
+import { COLORS } from '../../constants/colors';
+import { money, niceType } from '../../constants/format';
+import { MOCK_SESSIONS } from '../../constants/mockData';
+import FloatingChatButton from '../../components/FloatingChatButton';
 
 export default function SessionDetail({ route, navigation }) {
   const { sessionId } = route.params || {};
