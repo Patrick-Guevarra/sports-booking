@@ -7,7 +7,7 @@ export const MOCK_SESSIONS = [
     type: 'one_on_one',
     startTime: '2025-11-01T10:00:00Z',
     endTime: '2025-11-01T11:00:00Z',
-    basePriceCents: 6000,
+    basePriceCents: 5000,
     capacity: 1,
     status: 'open'
   },
