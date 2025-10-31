@@ -1,8 +1,11 @@
 
+import FirestoreTestScreen from './src/screens/FirestoreTestScreen';
 import React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SignupScreen from './src/screens/Auth/SignupScreen';
+
 
 import Home from './src/screens/athlete/Home';
 import SessionsList from './src/screens/athlete/SessionsList';
@@ -28,7 +31,10 @@ function RootNavigator() {
   return (
     <NavigationContainer>
       {/* key={role} forces a remount when switching roles */}
-      <Stack.Navigator key={role} screenOptions={{ headerShadowVisible: false }}>
+      <Stack.Navigator key={role} initialRouteName="Signup" screenOptions={{ headerShadowVisible: false }}>
+        
+        <Stack.Screen name="Signup" component={SignupScreen} options={{ title: 'Create Account' }} />
+
         {role === 'athlete' ? (
           <>
             <Stack.Screen name="Home" component={Home} options={{ title: 'Sports Training' }} />
@@ -36,6 +42,7 @@ function RootNavigator() {
             <Stack.Screen name="SessionDetail" component={SessionDetail} options={{ title: 'Session Detail' }} />
             <Stack.Screen name="Bookings" component={Bookings} options={{ title: 'My Bookings' }} />
             <Stack.Screen name="Chat" component={Chat} options={{ title: 'AI Assistant' }} />
+            <Stack.Screen name="FirestoreTest" component={FirestoreTestScreen} options={{ title: 'Database Test' }} />
           </>
         ) : (
           <>
