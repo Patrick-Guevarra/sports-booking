@@ -1,73 +1,64 @@
-from pathlib import Path
-from .router import detect_intent
+import os
+from typing import Dict, Any, Optional
 
-KB_DIR = Path(__file__).parent / "knowledge"
+import requests
 
-def load_kb():
-    kb = {}
-    for name in ["faq_basic.md", "pricing_rules.md", "policies.md"]:
-        p = KB_DIR / name
-        kb[name] = p.read_text(encoding="utf-8") if p.exists() else ""
-    return kb
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 
-def answer(text: str) -> dict:
-    intent = detect_intent(text)
-    kb = load_kb()
+SYSTEM_PROMPT = """
+You are an AI assistant for a sports training booking app.
 
-    if intent == "pricing":
-        # simple rule: 1-on-1 costs more; price ~ time * rate * multiplier
-        return {
-            "intent": intent,
-            "answer": (
-                "One-on-one sessions cost more than group. Pricing is based on session type "
-                "and duration. Example: total = rate_per_hour × hours × type_multiplier "
-                "(1.0 for group, 1.5 for one-on-one)."
-            ),
-            "next_actions": ["See available sessions", "Compare one-on-one vs group"]
-        }
+The app currently:
+- Offers sports: basketball, soccer, tennis, track conditioning.
+- Has two session types: "one_on_one" and "group".
+- Shows coaches, prices (in cents), duration, and capacity.
+- Lets athletes browse sessions, view details, and (for now) create simulated bookings.
+- Has booking statuses: "pending", "confirmed", "canceled", "completed".
 
-    if intent == "booking_help":
-        return {
-            "intent": intent,
-            "answer": (
-                "To book: choose a coach → pick a time → confirm. You can reschedule before "
-                "the session window closes; cancellations follow the refund policy."
-            ),
-            "next_actions": ["Show booking steps", "View refund policy"]
-        }
+Your job:
+- Answer questions about sports, sessions, pricing, booking flow, and coach options.
+- If the user asks about features we don't have, explain the current limitations.
+- Keep answers short, specific, and friendly.
+- If you're not sure, say you don't know instead of making things up.
+""".strip()
 
-    if intent == "training_reco":
-        return {
-            "intent": intent,
-            "answer": (
-                "If you want focused, faster improvement, choose one-on-one. For general skill "
-                "practice and lower cost per person, choose group. Tell me your sport and goal."
-            ),
-            "next_actions": ["Collect sport & skill level", "Suggest coaches (coming soon)"]
-        }
+def generate_ai_reply(
+    message: str,
+    role: str = "athlete",
+    context: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Call a local Ollama model and return a dict shaped like AIResponse:
+    { "reply": str, "suggestions": List[str], "meta": Dict }
+    """
 
-    if intent == "policy_faq":
-        return {
-            "intent": intent,
-            "answer": (
-                "Refunds: full if canceled ≥24h in advance; partial within 24h; no-show is not refundable. "
-                "Late policy: coaches wait 10 minutes before marking a no-show."
-            ),
-            "next_actions": ["Show full policy", "Start a cancellation"]
-        }
+    # You can weave role/context into the prompt later if you want
+    user_prompt = message
 
-    if intent == "smalltalk":
-        return {"intent": intent, "answer": "Hey! I can help you pick sessions or answer booking questions.", "next_actions": []}
+    full_prompt = f"{SYSTEM_PROMPT}\n\nUser role: {role}\n\nUser: {user_prompt}"
 
-    # fallback uses KB dump for now
-    return {"intent": "fallback", "answer": "I can help with pricing, booking, recommendations, or policies. What would you like to know?", "next_actions": []}
+    # Call Ollama's /api/generate endpoint (non-streaming)
+    resp = requests.post(
+        f"{OLLAMA_BASE_URL}/api/generate",
+        json={
+            "model": "llama3.2",  # or "llama3" or whatever you pulled
+            "prompt": full_prompt,
+            "stream": False,      # so we just get one JSON response
+        },
+        timeout=60,
+    )
+    resp.raise_for_status()
+    data = resp.json()
 
-if __name__ == "__main__":
-    # quick CLI for demos
-    while True:
-        try:
-            q = input("You: ")
-            if not q.strip(): break
-            print("AI:", answer(q)["answer"])
-        except (EOFError, KeyboardInterrupt):
-            break
+    reply_text = data.get("response", "").strip()
+    if not reply_text:
+        reply_text = "Sorry, I couldn't generate a response just now."
+
+    return {
+        "reply": reply_text,
+        "suggestions": [],  # you can fill these later if you want
+        "meta": {
+            "model": "llama3.2",
+            "source": "ollama",
+        },
+    }

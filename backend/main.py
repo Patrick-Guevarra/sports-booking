@@ -8,9 +8,9 @@ app = FastAPI(title="Sports Booking AI API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],   # tighten later
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_credentials=True, #allows cookies, auth headers, tokens, etc.
+    allow_methods=["*"], # allows all http methods
+    allow_headers=["*"], # allows any custom headers the frontend sends
     
 )
 

@@ -1,0 +1,13 @@
+# python virtual env
+.venv/ 
+
+#env variables
+.env
+
+#if db is created add here, ex: sqlite db #.db
+
+#python cache
+__pycache__/
+*.pyc
+
+.vscode

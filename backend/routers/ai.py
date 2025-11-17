@@ -2,9 +2,11 @@
 
 from fastapi import APIRouter
 from ..models.schema import AIQuery, AIResponse
+from ..ai_assistant.ai_agent import generate_ai_reply
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
+'''
 # super simple rule-based reply (placeholder for real AI)
 def simple_reply(message: str):
     t = message.lower()
@@ -25,8 +27,15 @@ def simple_reply(message: str):
         "suggestions": ["What sports do you offer?", "Recommend a session", "How does payment work?"],
         "meta": {"intent": "chitchat"}
     }
+'''
 
 @router.post("/query", response_model=AIResponse)
 def ai_query(payload: AIQuery):
-    result = simple_reply(payload.message)
+    # payload: AIQuery (message, user_id, role, context)
+    result = generate_ai_reply(
+        message=payload.message,
+        role=payload.role,
+        context=payload.context,
+    )
+    # result is a dict: { reply, suggestions, meta }
     return AIResponse(**result)
