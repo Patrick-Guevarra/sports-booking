@@ -3,7 +3,7 @@ import { useRole } from '../RoleContext';
 
 export default function RoleSwitcher() {
   const { role, setRole } = useRole();
-  const other = role === 'athlete' ? 'coach' : 'athlete';
+  const other = (role === 'athlete') ? 'coach' : 'athlete';
   return (
     <View style={{ flexDirection:'row', gap:8 }}>
       <Text style={{ alignSelf:'center' }}>Role: {role}</Text>

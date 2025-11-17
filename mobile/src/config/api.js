@@ -1,7 +1,5 @@
-// api.js — handles calling your FastAPI backend
+// handles calling FastAPI backend
 
-// For iOS simulator, localhost works fine.
-// If you test on a *physical phone*, replace with your Mac’s LAN IP (find it in Expo Dev Tools).
 export const API_BASE_URL = "http://127.0.0.1:8001";
 
 export async function aiQuery({ message, userId = null, context = {} }) {
@@ -31,3 +29,4 @@ export async function aiQuery({ message, userId = null, context = {} }) {
     };
   }
 }
+

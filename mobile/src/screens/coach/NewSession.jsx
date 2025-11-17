@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { COLORS } from '../../constants/colors';
 
 export default function NewSession({ navigation }) {
-  // Local form state (simulated only)
+  // Local form state (simulated only), modify when database is integrated
   const [sport, setSport] = useState('basketball');
   const [type, setType] = useState('one_on_one'); // 'one_on_one' | 'group'
   const [startTime, setStartTime] = useState('2025-11-10T15:00:00Z');
@@ -40,7 +40,7 @@ export default function NewSession({ navigation }) {
   return (
     <View style={{ flex:1, padding:16, backgroundColor: COLORS.bg }}>
       <Field label="Sport">
-        <TextInput value={sport} onChangeText={setSport} style={inputStyle} />
+        <TextInput value={sport} onChangeText={setSport} style={inputStyle} /> 
       </Field>
 
       <Field label="Type (one_on_one or group)">

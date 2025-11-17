@@ -15,7 +15,7 @@ export default function ManageBookings() {
   const coachName = 'Jordan Dasher'; // TODO: replace with logged-in coach
   const coachBookings = useMemo(
     () => MOCK_BOOKINGS.filter(b => b.coachName === coachName),
-    [coachName]
+    [coachName] //remove useMemo when db is integrated, add the GET request
   );
   const [data, setData] = useState(coachBookings);
 
@@ -60,7 +60,7 @@ export default function ManageBookings() {
               </Text>
 
               <View style={{ flexDirection:'row', gap:8, marginTop:12 }}>
-                {item.status !== 'confirmed' && item.status !== 'completed' && item.status !== 'canceled' && (
+                {item.status !== 'confirmed' && item.status !== 'completed' && item.status !== 'canceled' && ( //if status is pending
                   <TouchableOpacity
                     onPress={() => setStatus(item.id, 'confirmed')}
                     style={{ backgroundColor:'#10B981', paddingVertical:8, paddingHorizontal:12, borderRadius:8 }}
@@ -68,7 +68,7 @@ export default function ManageBookings() {
                     <Text style={{ color:'#fff' }}>Confirm</Text>
                   </TouchableOpacity>
                 )}
-                {item.status !== 'completed' && item.status !== 'canceled' && (
+                {item.status !== 'completed' && item.status !== 'canceled' && ( //if status is confirmed 
                   <TouchableOpacity
                     onPress={() => setStatus(item.id, 'canceled')}
                     style={{ backgroundColor:'#EF4444', paddingVertical:8, paddingHorizontal:12, borderRadius:8 }}

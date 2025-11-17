@@ -27,7 +27,7 @@ function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {/* key={role} forces a remount when switching roles */}
+      {/* key={role} forces a remount when switching roles, remove key when auth is implemented */}
       <Stack.Navigator key={role} screenOptions={{ headerShadowVisible: false }}>
         {role === 'athlete' ? (
           <>

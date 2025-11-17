@@ -5,8 +5,8 @@ import { MOCK_SESSIONS } from '../../constants/mockData';
 import FloatingChatButton from '../../components/FloatingChatButton';
 
 export default function SessionDetail({ route, navigation }) {
-  const { sessionId } = route.params || {};
-  const session = MOCK_SESSIONS.find(s => String(s.id) === String(sessionId));
+  const { sessionId } = route.params || {}; //navigation.navigate('SessionDetail', { sessionId: item.id }), () avoids crashes
+  const session = MOCK_SESSIONS.find(s => String(s.id) === String(sessionId)); 
 
   if (!session) {
     return (
@@ -16,6 +16,7 @@ export default function SessionDetail({ route, navigation }) {
     );
   }
 
+  //post to fastapi once db is integrated
   const onBook = () => {
     Alert.alert('Booking', `Created booking for ${session.sport} (${niceType(session.type)})`);
   };

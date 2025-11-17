@@ -39,3 +39,14 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Ignore Python virtual environments
+ai_services/ai_api/.venv/
+
+# Node modules (React Native)
+mobile/node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+

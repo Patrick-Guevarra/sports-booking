@@ -19,6 +19,7 @@ export default function SessionsList({ navigation }) {
       </View>
     );
   }
+  // Loading icon until fastapi fetches the sessions
 
   return (
     <View style={{ flex: 1, padding: 16, backgroundColor: COLORS.bg }}>
