@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,6 +8,8 @@ import SessionsList from './src/screens/athlete/SessionsList';
 import SessionDetail from './src/screens/athlete/SessionDetail';
 import Bookings from './src/screens/athlete/Bookings';
 import Chat from './src/screens/athlete/Chat';
+import TestBackend from "./src/screens/TestBackend";
+
 
 import ProviderHome from './src/screens/coach/ProviderHome';
 import MySessions from './src/screens/coach/MySessions';
@@ -27,8 +28,18 @@ function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {/* key={role} forces a remount when switching roles, remove key when auth is implemented */}
-      <Stack.Navigator key={role} screenOptions={{ headerShadowVisible: false }}>
+      <Stack.Navigator
+        key={role}
+        screenOptions={{ headerShadowVisible: false }}
+        initialRouteName="TestBackend"   // 👈 start on this screen for now
+      >
+        {/* 👇 add this screen so we can see the backend test */}
+        <Stack.Screen
+          name="TestBackend"
+          component={TestBackend}
+          options={{ title: "Backend Health Check" }}
+        />
+
         {role === 'athlete' ? (
           <>
             <Stack.Screen name="Home" component={Home} options={{ title: 'Sports Training' }} />
@@ -50,6 +61,7 @@ function RootNavigator() {
     </NavigationContainer>
   );
 }
+
 
 export default function App() {
   return (

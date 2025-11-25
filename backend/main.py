@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import ai as ai_router
+from backend.routers import ai as ai_router
+from backend.routers import auth as auth_router
+from backend.routers.auth import router as auth_router
+
+
 
 app = FastAPI(title="Sports Booking AI API")
 
@@ -15,6 +19,8 @@ app.add_middleware(
 )
 
 app.include_router(ai_router.router)
+app.include_router(auth_router)
+
 
 @app.get("/health")
 def health():

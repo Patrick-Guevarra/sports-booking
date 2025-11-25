@@ -1,32 +1,75 @@
-// handles calling FastAPI backend
+// src/config/api.js
 
-export const API_BASE_URL = "http://127.0.0.1:8001";
+// 🔥 Backend URL (use 127.0.0.1 if you're using an Android/iOS simulator)
+export const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
-export async function aiQuery({ message, userId = null, context = {} }) {
+
+// Generic helper
+async function request(path, options = {}) {
+  const url = `${API_BASE_URL}${path}`;
+
+  const res = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+
+  const text = await res.text();
+  let body = null;
   try {
-    const res = await fetch(`${API_BASE_URL}/api/ai/query`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        role: "athlete",
-        user_id: userId,
-        message,
-        context,
-      }),
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`AI error ${res.status}: ${text}`);
-    }
-    return await res.json(); // reply, suggestions, meta
-  } catch (err) {
-    console.warn("AI fetch error:", err);
-    return {
-      reply:
-        "⚠️ I couldn’t connect to the AI service. Make sure it’s running on port 8001.",
-      suggestions: [],
-      meta: {},
-    };
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    body = text;
   }
+
+  if (!res.ok) {
+    console.warn("API error:", res.status, body);
+    throw new Error(body?.detail || "API request failed");
+  }
+
+  return body;
 }
+
+
+// ---------- AUTH ROUTES ----------
+export function signup({ full_name, email, password, role, sport_specialty }) {
+  return request("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({
+      full_name,
+      email,
+      password,
+      role,
+      sport_specialty: sport_specialty || null,
+    }),
+  });
+}
+
+export function login({ email, password }) {
+  return request("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+}
+
+
+// ---------- AI QUERY ----------
+export function aiQuery({ message, userId = null, role = "athlete", context = {} }) {
+  return request("/api/ai/query", {
+    method: "POST",
+    body: JSON.stringify({
+      role,
+      user_id: userId,
+      message,
+      context,
+    }),
+  });
+}
+
+export { request };
+
+
 
