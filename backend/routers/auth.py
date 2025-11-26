@@ -7,9 +7,14 @@ from passlib.hash import bcrypt
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
+# ---- constants ----
+MAX_PASSWORD_BYTES = 72  # bcrypt limit
+
+
 # Path to DB
 BASE_DIR = Path(__file__).resolve().parents[1]
 DB_PATH = BASE_DIR / "db" / "sports_booking.db"
+
 
 def get_conn():
     return sqlite3.connect(DB_PATH)
@@ -31,21 +36,38 @@ class LoginRequest(BaseModel):
 
 @router.post("/signup")
 def signup(payload: SignupRequest):
+    # ---- password length guard ----
+    if len(payload.password.encode("utf-8")) > MAX_PASSWORD_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Password is too long. Maximum is {MAX_PASSWORD_BYTES} characters.",
+        )
+
     conn = get_conn()
     cur = conn.cursor()
 
+    # check if email already exists
     cur.execute("SELECT user_id FROM Users WHERE email = ?", (payload.email,))
     if cur.fetchone():
         conn.close()
         raise HTTPException(status_code=400, detail="Email already registered")
 
+    # hash password (safe now that length is checked)
     hashed_pw = bcrypt.hash(payload.password)
 
-    cur.execute("""
+    cur.execute(
+        """
         INSERT INTO Users (full_name, email, password, role, sport_specialty)
         VALUES (?, ?, ?, ?, ?)
-    """, (payload.full_name, payload.email, hashed_pw, payload.role, payload.sport_specialty))
-
+        """,
+        (
+            payload.full_name,
+            payload.email,
+            hashed_pw,
+            payload.role,
+            payload.sport_specialty,
+        ),
+    )
     conn.commit()
     user_id = cur.lastrowid
     conn.close()
@@ -60,15 +82,25 @@ def signup(payload: SignupRequest):
 
 @router.post("/login")
 def login(payload: LoginRequest):
+    # optional: same guard so bcrypt.verify never sees an overlong password
+    if len(payload.password.encode("utf-8")) > MAX_PASSWORD_BYTES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Password is too long. Maximum is {MAX_PASSWORD_BYTES} characters.",
+        )
+
     conn = get_conn()
     cur = conn.cursor()
 
-    cur.execute("""
+    cur.execute(
+        """
         SELECT user_id, password, role, full_name 
         FROM Users 
         WHERE email = ?
-    """, (payload.email,))
-    
+        """,
+        (payload.email,),
+    )
+
     row = cur.fetchone()
     conn.close()
 

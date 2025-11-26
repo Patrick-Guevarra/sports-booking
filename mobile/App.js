@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -10,34 +9,47 @@ import Bookings from './src/screens/athlete/Bookings';
 import Chat from './src/screens/athlete/Chat';
 import TestBackend from "./src/screens/TestBackend";
 
-
 import ProviderHome from './src/screens/coach/ProviderHome';
 import MySessions from './src/screens/coach/MySessions';
 import NewSession from './src/screens/coach/NewSession';
 import ManageBookings from './src/screens/coach/ManageBookings';
 import Payouts from './src/screens/coach/Payouts';
 
+import LoginScreen from './src/screens/Auth/LoginScreen';
+import SignupScreen from './src/screens/Auth/SignupScreen';
+
 import { RoleProvider, useRole } from './src/RoleContext';
 
 const Stack = createNativeStackNavigator();
-
-
 
 function RootNavigator() {
   const { role } = useRole(); // 'athlete' | 'coach'
 
   return (
     <NavigationContainer>
+      {/* key={role} forces a remount when switching roles */}
       <Stack.Navigator
         key={role}
         screenOptions={{ headerShadowVisible: false }}
-        initialRouteName="TestBackend"   // 👈 start on this screen for now
+        initialRouteName="Login"
       >
-        {/* 👇 add this screen so we can see the backend test */}
+        {/* Auth screens always available */}
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={{ title: 'Create Account' }}
+        />
+
+        {/* Optional: keep this debug screen */}
         <Stack.Screen
           name="TestBackend"
           component={TestBackend}
-          options={{ title: "Backend Health Check" }}
+          options={{ title: 'Backend Health Check' }}
         />
 
         {role === 'athlete' ? (
@@ -61,7 +73,6 @@ function RootNavigator() {
     </NavigationContainer>
   );
 }
-
 
 export default function App() {
   return (
