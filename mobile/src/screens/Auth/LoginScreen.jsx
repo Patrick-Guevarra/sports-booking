@@ -1,4 +1,4 @@
-// src/screens/auth/LoginScreen.js
+// src/screens/Auth/LoginScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -13,8 +13,9 @@ import { login } from "../../config/api";
 import { useRole } from "../../RoleContext";
 
 export default function LoginScreen({ navigation }) {
-  const { setRole } = useRole();
-  const [email, setEmail] = useState("");
+  const { setRole, setUserId, setFullName, setEmail } = useRole();
+
+  const [email, setEmailInput] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,21 +28,14 @@ export default function LoginScreen({ navigation }) {
     setLoading(true);
     try {
       const user = await login({ email, password });
-
       // user = { user_id, email, role, full_name }
-      setRole(user.role);
 
-      if (user.role === "coach") {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "ProviderHome" }],
-        });
-      } else {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Home" }],
-        });
-      }
+      setRole(user.role);
+      setUserId(user.user_id);
+      setFullName(user.full_name);
+      setEmail(user.email);
+
+      // No navigation.reset here; RootNavigator reacts to userId/role
     } catch (err) {
       console.error("Login error:", err);
       Alert.alert("Login failed", err.message || "Invalid email or password.");
@@ -59,10 +53,15 @@ export default function LoginScreen({ navigation }) {
       <TextInput
         placeholder="Email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={setEmailInput}
         autoCapitalize="none"
         keyboardType="email-address"
-        style={{ borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 10 }}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 10,
+        }}
       />
 
       <TextInput
@@ -70,7 +69,12 @@ export default function LoginScreen({ navigation }) {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 16 }}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 16,
+        }}
       />
 
       {loading ? (

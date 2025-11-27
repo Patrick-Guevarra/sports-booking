@@ -71,5 +71,18 @@ export function aiQuery({ message, userId = null, role = "athlete", context = {}
 
 export { request };
 
+// ---------- SESSIONS ----------
+export function createSession(data) {
+  return request("/sessions", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export function listSessions() {
+  return request("/sessions");
+}
+
+
 
 

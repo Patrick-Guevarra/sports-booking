@@ -1,4 +1,4 @@
-// src/screens/auth/SignupScreen.js
+// src/screens/Auth/SignupScreen.js
 import React, { useState } from "react";
 import {
   View,
@@ -13,9 +13,12 @@ import { signup } from "../../config/api";
 import { useRole } from "../../RoleContext";
 
 export default function SignupScreen({ navigation }) {
-  const { role, setRole } = useRole(); // role not used right now, but fine to keep
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
+  // from RoleContext
+  const { setRole, setUserId, setFullName, setEmail } = useRole();
+
+  // local form state
+  const [fullName, setFullNameInput] = useState("");
+  const [email, setEmailInput] = useState("");
   const [password, setPassword] = useState("");
   const [roleChoice, setRoleChoice] = useState("athlete"); // "athlete" | "coach"
   const [sportSpecialty, setSportSpecialty] = useState("");
@@ -36,15 +39,16 @@ export default function SignupScreen({ navigation }) {
         role: roleChoice,
         sport_specialty: sportSpecialty || null,
       });
+      // user = { user_id, full_name, email, role }
 
-      // Update global role so RootNavigator switches stack
+      // save into global context
       setRole(user.role);
+      setUserId(user.user_id);
+      setFullName(user.full_name);
+      setEmail(user.email);
 
-      // Decide which screen to go to
-      const target = user.role === "coach" ? "ProviderHome" : "Home";
-
-      // Simple navigate – RootNavigator key={role} will remount the stack
-      navigation.navigate(target);
+      // no navigation.reset here – RootNavigator will see userId/role
+      // and automatically show ProviderHome or Home as the initial screen
     } catch (err) {
       console.error("Signup error:", err);
       Alert.alert("Signup failed", err.message || "Please try again.");
@@ -62,17 +66,27 @@ export default function SignupScreen({ navigation }) {
       <TextInput
         placeholder="Full Name"
         value={fullName}
-        onChangeText={setFullName}
-        style={{ borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 10 }}
+        onChangeText={setFullNameInput}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 10,
+        }}
       />
 
       <TextInput
         placeholder="Email"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={setEmailInput}
         autoCapitalize="none"
         keyboardType="email-address"
-        style={{ borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 10 }}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 10,
+        }}
       />
 
       <TextInput
@@ -80,7 +94,12 @@ export default function SignupScreen({ navigation }) {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 16 }}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 16,
+        }}
       />
 
       <Text style={{ fontWeight: "600", marginBottom: 6 }}>I am a:</Text>
@@ -133,7 +152,12 @@ export default function SignupScreen({ navigation }) {
           placeholder="Sport Specialty (e.g. Basketball)"
           value={sportSpecialty}
           onChangeText={setSportSpecialty}
-          style={{ borderWidth: 1, borderRadius: 8, padding: 10, marginBottom: 16 }}
+          style={{
+            borderWidth: 1,
+            borderRadius: 8,
+            padding: 10,
+            marginBottom: 16,
+          }}
         />
       )}
 

@@ -15,39 +15,31 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Sessions (
-    session_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    coach_id INTEGER NOT NULL,
-    session_type TEXT CHECK(session_type IN ('one-on-one', 'group')) NOT NULL,
-    sport TEXT NOT NULL,
-    price_per_hour REAL NOT NULL,
-    duration_minutes INTEGER NOT NULL,
-    description TEXT,
-    availability_start DATETIME,
-    availability_end DATETIME,
+    session_id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    coach_id        INTEGER NOT NULL,
+    sport           TEXT NOT NULL,
+    session_type    TEXT CHECK(session_type IN ('one-on-one', 'group')) NOT NULL,
+    date            TEXT NOT NULL,          -- 'YYYY-MM-DD'
+    start_time      TEXT NOT NULL,          -- 'HH:MM'
+    end_time        TEXT NOT NULL,          -- 'HH:MM'
+    price           REAL NOT NULL,
+    capacity        INTEGER NOT NULL,
+    status          TEXT CHECK(status IN ('open', 'closed')) NOT NULL DEFAULT 'open',
+    location        TEXT,
+    description     TEXT,
+    created_at      TEXT DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (coach_id) REFERENCES Users(user_id)
 );
 
+
 CREATE TABLE Bookings (
-    booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    session_id INTEGER NOT NULL,
-    athlete_id INTEGER NOT NULL,
-    booking_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    booking_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id    INTEGER NOT NULL,
+    athlete_id    INTEGER NOT NULL,
+    booking_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
     scheduled_time DATETIME NOT NULL,
     status TEXT CHECK(status IN ('pending', 'confirmed', 'completed', 'cancelled'))
-        DEFAULT 'pending',
+           DEFAULT 'pending',
     FOREIGN KEY (session_id) REFERENCES Sessions(session_id),
     FOREIGN KEY (athlete_id) REFERENCES Users(user_id)
 );
-
--- SAMPLE DATA (optional for testing)
-
-INSERT INTO Users (full_name, email, password, role, sport_specialty)
-VALUES
-('Jordan Coach', 'jordan@coach.com', 'pw1', 'coach', 'Basketball'),
-('Pat Coach', 'pat@coach.com', 'pw2', 'coach', 'Tennis'),
-('Alex Athlete', 'alex@athlete.com', 'pw3', 'athlete', NULL);
-
-INSERT INTO Sessions (coach_id, session_type, sport, price_per_hour, duration_minutes, description)
-VALUES
-(1, 'one-on-one', 'Basketball', 50.00, 60, 'Dribbling and shooting drills'),
-(2, 'group', 'Tennis', 30.00, 90, 'Serving and rally drills');
