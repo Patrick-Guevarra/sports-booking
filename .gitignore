@@ -1,0 +1,93 @@
+########################################
+# GLOBAL IGNORE RULES FOR FULL-STACK APP
+########################################
+
+##########
+# Python #
+##########
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.venv/
+backend/.env
+mobile/.env
+
+# SQLite local DB (never commit local state)
+*.db
+backend/db/*.db
+
+#################
+# Node & Expo   #
+#################
+
+# Node dependencies
+node_modules/
+mobile/node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+
+# Metro bundler
+.metro-health-check*
+
+################
+# React Native #
+################
+
+# Android / iOS build folders
+/android/
+/ios/
+
+####################
+# TypeScript files #
+####################
+*.tsbuildinfo
+
+###################
+# macOS / Windows #
+###################
+.DS_Store
+Thumbs.db
+
+###################
+# Security / Keys #
+###################
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+####################
+# Debug logs       #
+####################
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+##########################
+# Local environment files #
+##########################
+.env
+.env*.local
+mobile/.env
+backend/.env
+
+########################################
+# AI / Other Services
+########################################
+
+# Ignore Python virtual env inside ai_services (if ever used)
+ai_services/ai_api/.venv/
+

@@ -11,7 +11,7 @@ You are an AI assistant for a sports training booking app.
 The app currently:
 - Offers sports: basketball, soccer, tennis, track conditioning.
 - Has two session types: "one_on_one" and "group".
-- Shows coaches, prices (in cents), duration, and capacity.
+- Shows coaches, prices in US dollars (e.g. $25), duration, and capacity.
 - Lets athletes browse sessions, view details, and (for now) create simulated bookings.
 - Has booking statuses: "pending", "confirmed", "canceled", "completed".
 
@@ -32,10 +32,21 @@ def generate_ai_reply(
     { "reply": str, "suggestions": List[str], "meta": Dict }
     """
 
-    # You can weave role/context into the prompt later if you want
+    # Build optional context text from the context dict
+    context_text = ""
+    if context and isinstance(context, dict):
+        db_ctx = context.get("db_context")
+        if db_ctx:
+            context_text = f"\n\nAPP_CONTEXT (from database):\n{db_ctx}"
+
     user_prompt = message
 
-    full_prompt = f"{SYSTEM_PROMPT}\n\nUser role: {role}\n\nUser: {user_prompt}"
+    full_prompt = (
+        f"{SYSTEM_PROMPT}\n\n"
+        f"User role: {role}"
+        f"{context_text}\n\n"
+        f"User: {user_prompt}"
+    )
 
     # Call Ollama's /api/generate endpoint (non-streaming)
     resp = requests.post(
