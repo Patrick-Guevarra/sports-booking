@@ -73,12 +73,6 @@ function RootNavigator() {
               options={{ title: "Payouts" }}
             />
 
-            {/* (Optional) let coaches switch over to athlete views too */}
-            <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Sessions" component={SessionsList} />
-            <Stack.Screen name="SessionDetail" component={SessionDetail} />
-            <Stack.Screen name="Bookings" component={Bookings} />
-            <Stack.Screen name="Chat" component={Chat} />
           </>
         ) : (
           // LOGGED IN AS ATHLETE
@@ -109,12 +103,6 @@ function RootNavigator() {
               options={{ title: "AI Assistant" }}
             />
 
-            {/* (Optional) allow athlete to switch to coach dashboard if role toggles later */}
-            <Stack.Screen
-              name="ProviderHome"
-              component={ProviderHome}
-              options={{ title: "Coach Dashboard" }}
-            />
             <Stack.Screen name="MySessions" component={MySessions} />
             <Stack.Screen name="NewSession" component={NewSession} />
             <Stack.Screen name="ManageBookings" component={ManageBookings} />
