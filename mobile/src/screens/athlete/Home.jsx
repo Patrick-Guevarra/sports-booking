@@ -2,12 +2,8 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useLayoutEffect } from 'react';
 import { COLORS } from '../../constants/colors';
 import FloatingChatButton from '../../components/FloatingChatButton';
-import RoleSwitcher from '../../components/RoleSwitcher';
 
 export default function Home({ navigation }) {
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerRight: () => <RoleSwitcher /> });
-  }, [navigation]);
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: COLORS.bg }}>
       <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 16 }}>

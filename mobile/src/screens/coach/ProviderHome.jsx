@@ -1,6 +1,5 @@
 import React, { useLayoutEffect } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import RoleSwitcher from "../../components/RoleSwitcher";
 import { useRole } from "../../RoleContext";
 
 const Card = ({ title, subtitle, onPress }) => (
@@ -23,10 +22,6 @@ const Card = ({ title, subtitle, onPress }) => (
 
 export default function ProviderHome({ navigation }) {
   const { userId, fullName } = useRole();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerRight: () => <RoleSwitcher /> });
-  }, [navigation]);
 
   const goToNewSession = () => {
     if (!userId) {
