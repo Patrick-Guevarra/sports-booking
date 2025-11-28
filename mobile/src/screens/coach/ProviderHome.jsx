@@ -1,6 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useRole } from "../../RoleContext";
+import LogoutButton from "../../components/LogoutButton";
 
 const Card = ({ title, subtitle, onPress }) => (
   <TouchableOpacity
@@ -42,6 +43,16 @@ export default function ProviderHome({ navigation }) {
       {fullName && (
         <Text style={{ color: "#6B7280", marginBottom: 12 }}>Welcome, {fullName}</Text>
       )}
+      <View
+              style={{
+                position: "absolute",
+                top: 15,
+                right: 15,
+                zIndex: 10,
+              }}
+            >
+              <LogoutButton small />
+      </View>
 
       <Card
         title="My Sessions"

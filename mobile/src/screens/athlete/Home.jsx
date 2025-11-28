@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useLayoutEffect } from 'react';
 import { COLORS } from '../../constants/colors';
 import FloatingChatButton from '../../components/FloatingChatButton';
+import LogoutButton from '../../components/LogoutButton';
 
 export default function Home({ navigation }) {
   return (
@@ -9,6 +10,16 @@ export default function Home({ navigation }) {
       <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 16 }}>
         Sports Training
       </Text>
+      <View
+        style={{
+          position: "absolute",
+          top: 15,
+          right: 15,
+          zIndex: 10,
+        }}
+      >
+        <LogoutButton small />
+      </View>
 
       <TouchableOpacity
         onPress={() => navigation.navigate('Sessions')}
