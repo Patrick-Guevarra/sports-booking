@@ -29,6 +29,13 @@ class SessionCreate(BaseModel):
     description: Optional[str] = None
 
 
+class SessionStatusUpdate(BaseModel):
+    coach_id: int
+    status: Literal["open", "closed"]
+
+
+
+
 @router.post("")
 def create_session(payload: SessionCreate):
     conn = get_conn()
@@ -136,3 +143,99 @@ def list_sessions():
         )
 
     return sessions
+
+
+@router.patch("/{session_id}/status")
+def update_session_status(session_id: int, payload: SessionStatusUpdate):
+    conn = get_conn()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT coach_id FROM Sessions WHERE session_id = ?",
+        (session_id,),
+    )
+    row = cur.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    if row[0] != payload.coach_id:
+        conn.close()
+        raise HTTPException(status_code=403, detail="Not authorized to update this session")
+
+    cur.execute(
+        "UPDATE Sessions SET status = ? WHERE session_id = ?",
+        (payload.status, session_id),
+    )
+    conn.commit()
+
+    cur.execute(
+        """
+        SELECT
+          session_id, coach_id, sport, session_type, date, start_time, end_time,
+          price, capacity, status, location, description
+        FROM Sessions
+        WHERE session_id = ?
+        """,
+        (session_id,),
+    )
+    updated = cur.fetchone()
+    conn.close()
+
+    (
+        s_id,
+        coach_id,
+        sport,
+        session_type,
+        date,
+        start_time,
+        end_time,
+        price,
+        capacity,
+        status,
+        location,
+        description,
+    ) = updated
+
+    return {
+        "session_id": s_id,
+        "coach_id": coach_id,
+        "sport": sport,
+        "session_type": session_type,
+        "date": date,
+        "start_time": start_time,
+        "end_time": end_time,
+        "price": price,
+        "capacity": capacity,
+        "status": status,
+        "location": location,
+        "description": description,
+    }
+
+
+@router.delete("/{session_id}")
+def delete_session(session_id: int, coach_id: int):
+    """
+    Delete a session (and its bookings) if it belongs to the coach.
+    """
+    conn = get_conn()
+    cur = conn.cursor()
+
+    cur.execute("SELECT coach_id FROM Sessions WHERE session_id = ?", (session_id,))
+    row = cur.fetchone()
+    if not row:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    if row[0] != coach_id:
+        conn.close()
+        raise HTTPException(status_code=403, detail="Not authorized to delete this session")
+
+    # Remove related bookings first
+    cur.execute("DELETE FROM Bookings WHERE session_id = ?", (session_id,))
+    # Delete the session
+    cur.execute("DELETE FROM Sessions WHERE session_id = ?", (session_id,))
+    conn.commit()
+    conn.close()
+
+    return {"deleted": True, "session_id": session_id}

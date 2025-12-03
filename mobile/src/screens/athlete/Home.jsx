@@ -7,8 +7,11 @@ import LogoutButton from '../../components/LogoutButton';
 export default function Home({ navigation }) {
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: COLORS.bg }}>
-      <Text style={{ fontSize: 22, fontWeight: '800', color: COLORS.text, marginBottom: 16 }}>
+      <Text style={{ fontSize: 26, fontWeight: '800', color: COLORS.text, marginBottom: 4 }}>
         Sports Training
+      </Text>
+      <Text style={{ color: COLORS.muted, marginBottom: 20 }}>
+        Book world-class coaching sessions with one tap.
       </Text>
       <View
         style={{
@@ -23,17 +26,39 @@ export default function Home({ navigation }) {
 
       <TouchableOpacity
         onPress={() => navigation.navigate('Sessions')}
-        style={{ backgroundColor: COLORS.card, borderColor: COLORS.border, borderWidth: 1, borderRadius: 14, padding: 16, marginBottom: 12 }}
+        activeOpacity={0.9}
+        style={{
+          backgroundColor: COLORS.card,
+          borderColor: COLORS.border,
+          borderWidth: 1,
+          borderRadius: 16,
+          padding: 18,
+          marginBottom: 12,
+          shadowColor: "#000",
+          shadowOpacity: 0.25,
+          shadowRadius: 12,
+        }}
       >
-        <Text style={{ fontWeight: '700', color: COLORS.text }}>Browse Sessions</Text>
-        <Text style={{ color: COLORS.muted, marginTop: 4 }}>Find group or 1-on-1 training</Text>
+        <Text style={{ fontWeight: '700', color: COLORS.text, fontSize: 16 }}>Browse Sessions</Text>
+        <Text style={{ color: COLORS.muted, marginTop: 6 }}>Find group or 1-on-1 training</Text>
       </TouchableOpacity>
 
         <TouchableOpacity
             onPress={() => navigation.navigate('Bookings')}
-            style={{ backgroundColor: COLORS.card, borderColor: COLORS.border, borderWidth: 1, borderRadius: 14, padding: 16, marginBottom: 12 }}>
-            <Text style={{ fontWeight: '700', color: COLORS.text }}>My Bookings</Text>
-            <Text style={{ color: COLORS.muted, marginTop: 4 }}>See upcoming and past sessions</Text>
+            activeOpacity={0.9}
+            style={{
+              backgroundColor: COLORS.card,
+              borderColor: COLORS.border,
+              borderWidth: 1,
+              borderRadius: 16,
+              padding: 18,
+              marginBottom: 12,
+              shadowColor: "#000",
+              shadowOpacity: 0.25,
+              shadowRadius: 12,
+            }}>
+            <Text style={{ fontWeight: '700', color: COLORS.text, fontSize: 16 }}>My Bookings</Text>
+            <Text style={{ color: COLORS.muted, marginTop: 6 }}>See upcoming and past sessions</Text>
         </TouchableOpacity>
       
       {/* Floating AI button */}

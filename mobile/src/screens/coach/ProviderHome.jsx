@@ -1,23 +1,29 @@
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useRole } from "../../RoleContext";
 import LogoutButton from "../../components/LogoutButton";
+import colorsDefault, { COLORS as COLORS_OBJ } from "../../constants/colors";
+
+const COLORS = COLORS_OBJ || colorsDefault;
 
 const Card = ({ title, subtitle, onPress }) => (
   <TouchableOpacity
     onPress={onPress}
     activeOpacity={0.9}
     style={{
-      backgroundColor: "#FFFFFF",
-      borderColor: "#E5E7EB",
+      backgroundColor: COLORS.card,
+      borderColor: COLORS.border,
       borderWidth: 1,
       borderRadius: 14,
       padding: 16,
       marginBottom: 12,
+      shadowColor: "#000",
+      shadowOpacity: 0.2,
+      shadowRadius: 10,
     }}
   >
-    <Text style={{ fontWeight: "700", fontSize: 16, color: "#111827" }}>{title}</Text>
-    {subtitle ? <Text style={{ color: "#6B7280", marginTop: 4 }}>{subtitle}</Text> : null}
+    <Text style={{ fontWeight: "700", fontSize: 16, color: COLORS.text }}>{title}</Text>
+    {subtitle ? <Text style={{ color: COLORS.muted, marginTop: 4 }}>{subtitle}</Text> : null}
   </TouchableOpacity>
 );
 
@@ -36,12 +42,12 @@ export default function ProviderHome({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 16, backgroundColor: "#F7F7FB" }}>
-      <Text style={{ fontSize: 22, fontWeight: "800", color: "#111827", marginBottom: 4 }}>
+    <View style={{ flex: 1, padding: 16, backgroundColor: COLORS.bg }}>
+      <Text style={{ fontSize: 24, fontWeight: "800", color: COLORS.text, marginBottom: 4 }}>
         Coach Dashboard
       </Text>
       {fullName && (
-        <Text style={{ color: "#6B7280", marginBottom: 12 }}>Welcome, {fullName}</Text>
+        <Text style={{ color: COLORS.muted, marginBottom: 12 }}>Welcome, {fullName}</Text>
       )}
       <View
               style={{
@@ -68,13 +74,8 @@ export default function ProviderHome({ navigation }) {
 
       <Card
         title="Bookings"
-        subtitle="Approve, cancel, mark complete"
+        subtitle="View who booked your sessions"
         onPress={() => navigation.navigate("ManageBookings")}
-      />
-      <Card
-        title="Payouts"
-        subtitle="Simulated earnings summary"
-        onPress={() => navigation.navigate("Payouts")}
       />
     </View>
   );

@@ -83,6 +83,45 @@ export function listSessions() {
   return request("/sessions");
 }
 
+// ---------- BOOKINGS ----------
+export function createBooking(data) {
+  return request("/bookings", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
 
+export function payForBooking(bookingId) {
+  return request("/payments/pay", {
+    method: "POST",
+    body: JSON.stringify({ booking_id: bookingId }),
+  });
+}
 
+export function listBookings({ athleteId, sessionId, coachId } = {}) {
+  const params = new URLSearchParams();
+  if (athleteId != null) params.append("athlete_id", athleteId);
+  if (sessionId != null) params.append("session_id", sessionId);
+  if (coachId != null) params.append("coach_id", coachId);
+  return request(`/bookings?${params.toString()}`);
+}
 
+export function updateSessionStatus({ sessionId, status, coachId }) {
+  return request(`/sessions/${sessionId}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status, coach_id: coachId }),
+  });
+}
+
+export function deleteSession({ sessionId, coachId }) {
+  return request(`/sessions/${sessionId}?coach_id=${coachId}`, {
+    method: "DELETE",
+  });
+}
+
+export function cancelBooking({ bookingId, athleteId }) {
+  return request(`/bookings/${bookingId}/cancel`, {
+    method: "PATCH",
+    body: JSON.stringify({ athlete_id: athleteId }),
+  });
+}

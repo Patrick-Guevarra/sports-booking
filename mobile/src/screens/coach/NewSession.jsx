@@ -5,13 +5,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Button,
-  ActivityIndicator,
   Alert,
   ScrollView,
 } from "react-native";
 import { createSession } from "../../config/api";
 import { useRole } from "../../RoleContext";
+import { COLORS } from "../../constants/colors";
+import AppButton from "../../components/AppButton";
 
 export default function NewSession({ navigation }) {
   const { role, userId } = useRole();
@@ -87,21 +87,23 @@ export default function NewSession({ navigation }) {
     }
   };
 
-  const labelStyle = { fontWeight: "600", marginBottom: 4, marginTop: 10 };
+  const labelStyle = { fontWeight: "600", marginBottom: 4, marginTop: 10, color: COLORS.text };
   const inputStyle = {
     borderWidth: 1,
     borderRadius: 8,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.card,
+    borderColor: COLORS.border,
+    color: COLORS.text,
   };
 
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: "#F7F7FB" }}
+      style={{ flex: 1, backgroundColor: COLORS.bg }}
       contentContainerStyle={{ padding: 16, paddingBottom: 40 }}
       keyboardShouldPersistTaps="handled"
     >
-      <Text style={{ fontSize: 22, fontWeight: "800" }}>Create Session</Text>
+      <Text style={{ fontSize: 22, fontWeight: "800", color: COLORS.text }}>Create Session</Text>
 
       {/* Sport */}
       <Text style={labelStyle}>Sport</Text>
@@ -117,46 +119,50 @@ export default function NewSession({ navigation }) {
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
           onPress={() => setSessionType("one-on-one")}
+        style={{
+          flex: 1,
+          padding: 10,
+          marginRight: 4,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: COLORS.border,
+          backgroundColor:
+            sessionType === "one-on-one" ? COLORS.primary : COLORS.card,
+        }}
+      >
+        <Text
           style={{
-            flex: 1,
-            padding: 10,
-            marginRight: 4,
-            borderRadius: 8,
-            borderWidth: 1,
-            backgroundColor:
-              sessionType === "one-on-one" ? "#007bff" : "#FFFFFF",
+            textAlign: "center",
+            color: sessionType === "one-on-one" ? "#0B1628" : COLORS.text,
+            fontWeight: "700",
           }}
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: sessionType === "one-on-one" ? "#fff" : "#000",
-            }}
-          >
-            One-on-One
-          </Text>
-        </TouchableOpacity>
+          One-on-One
+        </Text>
+      </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => setSessionType("group")}
+        style={{
+          flex: 1,
+          padding: 10,
+          marginLeft: 4,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: COLORS.border,
+          backgroundColor: sessionType === "group" ? COLORS.primary : COLORS.card,
+        }}
+      >
+        <Text
           style={{
-            flex: 1,
-            padding: 10,
-            marginLeft: 4,
-            borderRadius: 8,
-            borderWidth: 1,
-            backgroundColor: sessionType === "group" ? "#007bff" : "#FFFFFF",
+            textAlign: "center",
+            color: sessionType === "group" ? "#0B1628" : COLORS.text,
+            fontWeight: "700",
           }}
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: sessionType === "group" ? "#fff" : "#000",
-            }}
-          >
-            Group
-          </Text>
-        </TouchableOpacity>
+          Group
+        </Text>
+      </TouchableOpacity>
       </View>
 
       {/* Date */}
@@ -210,45 +216,49 @@ export default function NewSession({ navigation }) {
       <View style={{ flexDirection: "row", marginBottom: 4 }}>
         <TouchableOpacity
           onPress={() => setStatus("open")}
+        style={{
+          flex: 1,
+          padding: 10,
+          marginRight: 4,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: COLORS.border,
+          backgroundColor: status === "open" ? COLORS.primary : COLORS.card,
+        }}
+      >
+        <Text
           style={{
-            flex: 1,
-            padding: 10,
-            marginRight: 4,
-            borderRadius: 8,
-            borderWidth: 1,
-            backgroundColor: status === "open" ? "#10b981" : "#FFFFFF",
+            textAlign: "center",
+            color: status === "open" ? "#0B1628" : COLORS.text,
+            fontWeight: "700",
           }}
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: status === "open" ? "#fff" : "#000",
-            }}
-          >
-            Open
-          </Text>
-        </TouchableOpacity>
+          Open
+        </Text>
+      </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => setStatus("closed")}
           style={{
             flex: 1,
-            padding: 10,
-            marginLeft: 4,
-            borderRadius: 8,
-            borderWidth: 1,
-            backgroundColor: status === "closed" ? "#ef4444" : "#FFFFFF",
+          padding: 10,
+          marginLeft: 4,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: COLORS.border,
+          backgroundColor: status === "closed" ? "#EF4444" : COLORS.card,
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            color: status === "closed" ? "#fff" : COLORS.text,
+            fontWeight: "700",
           }}
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: status === "closed" ? "#fff" : "#000",
-            }}
-          >
-            Closed
-          </Text>
-        </TouchableOpacity>
+          Closed
+        </Text>
+      </TouchableOpacity>
       </View>
 
       {/* Location */}
@@ -271,11 +281,7 @@ export default function NewSession({ navigation }) {
       />
 
       <View style={{ marginTop: 20, marginBottom: 10 }}>
-        {loading ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <Button title="Publish Session" onPress={handlePublish} />
-        )}
+        <AppButton title="Publish Session" onPress={handlePublish} loading={loading} />
       </View>
     </ScrollView>
   );
