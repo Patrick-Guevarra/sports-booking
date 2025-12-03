@@ -1,40 +1,46 @@
+# backend/routers/payments.py
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import os
-import stripe
-from dotenv import load_dotenv
+from uuid import uuid4
 
-load_dotenv()  # load values from .env
+router = APIRouter(prefix="/payments", tags=["payments"])
 
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
+# What the frontend will send us
+class PaymentRequest(BaseModel):
+    amount: int
+    currency: str = "usd"
+    description: str | None = None
+    user_id: int | None = None
+    booking_id: int | None = None
 
-router = APIRouter(
-    prefix="/payments",
-    tags=["payments"],
-)
+# What we send back
+class PaymentResponse(BaseModel):
+    payment_id: str
+    status: str
+    amount: int
+    currency: str
+    description: str | None = None
+    simulated: bool = True
 
-class CheckoutRequest(BaseModel):
-    price_id: str   # Stripe price ID
-    quantity: int = 1
 
-@router.post("/create-checkout-session")
-def create_checkout_session(body: CheckoutRequest):
-    if stripe.api_key is None:
-        raise HTTPException(status_code=500, detail="Stripe API key not configured")
+@router.post("/create-checkout-session", response_model=PaymentResponse)
+async def create_checkout_session(body: PaymentRequest):
+    # Basic validation
+    if body.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be positive")
 
-    success_url = os.getenv("FRONTEND_SUCCESS_URL", "http://localhost:3000/payment-success")
-    cancel_url = os.getenv("FRONTEND_CANCEL_URL", "http://localhost:3000/payment-cancel")
+    # Fake “payment id” like a gateway would give us
+    payment_id = f"sim_{uuid4().hex[:12]}"
 
-    try:
-        session = stripe.checkout.Session.create(
-            mode="payment",
-            line_items=[{
-                "price": body.price_id,
-                "quantity": body.quantity,
-            }],
-            success_url=success_url + "?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url=cancel_url,
-        )
-        return {"checkout_url": session.url}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    # If you want to, this is where you’d also save
+    # a record in the database (payments table, etc.)
+
+    return PaymentResponse(
+        payment_id=payment_id,
+        status="succeeded",     # always success for this simulation
+        amount=body.amount,
+        currency=body.currency,
+        description=body.description,
+        simulated=True,
+    )
