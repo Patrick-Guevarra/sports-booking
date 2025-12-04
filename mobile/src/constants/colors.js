@@ -1,8 +1,11 @@
 export const COLORS = {
-  bg: '#F7F7FB',
-  text: '#111827',
-  muted: '#6B7280',
-  primary: '#2563EB',
-  card: '#FFFFFF',
-  border: '#E5E7EB',
+  bg: "#0F172A",        // deep navy
+  card: "#111827",      // slightly lighter for cards
+  border: "#1F2937",
+  text: "#E2E8F0",      // near-white
+  muted: "#94A3B8",     // slate
+  primary: "#22C55E",   // green accent
+  secondary: "#38BDF8", // teal-blue accent
 };
+
+export default COLORS;

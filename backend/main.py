@@ -1,22 +1,27 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routers import ai as ai_router
-from backend.routers import auth as auth_router
-from backend.routers import sessions as sessions_router   # 👈 NEW
+
+
+from .routers import payments, sessions, auth, ai, bookings  
 
 app = FastAPI(title="Sports Booking AI API")
 
+# CORS so Expo/mobile can talk to backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],      
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(ai_router.router)
-app.include_router(auth_router.router)
-app.include_router(sessions_router.router)                 # 👈 NEW
+# include routers
+app.include_router(auth.router)
+app.include_router(sessions.router)
+app.include_router(bookings.router)
+app.include_router(payments.router)   
+app.include_router(ai.router)
+
 
 @app.get("/health")
 def health():

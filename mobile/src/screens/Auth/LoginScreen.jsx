@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { login } from "../../config/api";
 import { useRole } from "../../RoleContext";
+import { COLORS } from "../../constants/colors";
+import AppButton from "../../components/AppButton";
 
 export default function LoginScreen({ navigation }) {
   const { setRole, setUserId, setFullName, setEmail } = useRole();
@@ -45,9 +47,12 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: "center" }}>
-      <Text style={{ fontSize: 24, fontWeight: "700", marginBottom: 16 }}>
-        Log In
+    <View style={{ flex: 1, padding: 20, justifyContent: "center", backgroundColor: COLORS.bg }}>
+      <Text style={{ fontSize: 26, fontWeight: "800", marginBottom: 6, color: COLORS.text }}>
+        Welcome back
+      </Text>
+      <Text style={{ color: COLORS.muted, marginBottom: 20 }}>
+        Sign in to manage your training sessions.
       </Text>
 
       <TextInput
@@ -61,7 +66,11 @@ export default function LoginScreen({ navigation }) {
           borderRadius: 8,
           padding: 10,
           marginBottom: 10,
+          borderColor: COLORS.border,
+          color: COLORS.text,
+          backgroundColor: COLORS.card,
         }}
+        placeholderTextColor={COLORS.muted}
       />
 
       <TextInput
@@ -74,20 +83,20 @@ export default function LoginScreen({ navigation }) {
           borderRadius: 8,
           padding: 10,
           marginBottom: 16,
+          borderColor: COLORS.border,
+          color: COLORS.text,
+          backgroundColor: COLORS.card,
         }}
+        placeholderTextColor={COLORS.muted}
       />
 
-      {loading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <Button title="Log In" onPress={handleLogin} />
-      )}
+      <AppButton title="Log In" onPress={handleLogin} loading={loading} />
 
       <TouchableOpacity
         onPress={() => navigation.navigate("Signup")}
         style={{ marginTop: 16 }}
       >
-        <Text style={{ textAlign: "center", color: "#007bff" }}>
+        <Text style={{ textAlign: "center", color: COLORS.secondary, fontWeight:"600" }}>
           New here? Create an account
         </Text>
       </TouchableOpacity>

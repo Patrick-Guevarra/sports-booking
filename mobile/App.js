@@ -2,6 +2,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { DefaultTheme } from "@react-navigation/native";
 
 import Home from "./src/screens/athlete/Home";
 import SessionsList from "./src/screens/athlete/SessionsList";
@@ -13,14 +14,26 @@ import ProviderHome from "./src/screens/coach/ProviderHome";
 import MySessions from "./src/screens/coach/MySessions";
 import NewSession from "./src/screens/coach/NewSession";
 import ManageBookings from "./src/screens/coach/ManageBookings";
-import Payouts from "./src/screens/coach/Payouts";
 
 import LoginScreen from "./src/screens/Auth/LoginScreen";
 import SignupScreen from "./src/screens/Auth/SignupScreen";
 
 import { RoleProvider, useRole } from "./src/RoleContext";
+import { COLORS } from "./src/constants/colors";
 
 const Stack = createNativeStackNavigator();
+
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: COLORS.bg,
+    card: COLORS.card,
+    text: COLORS.text,
+    border: COLORS.border,
+    primary: COLORS.primary,
+  },
+};
 
 function RootNavigator() {
   const { role, userId } = useRole();   // we added userId earlier
@@ -28,8 +41,16 @@ function RootNavigator() {
   const isCoach = role === "coach";
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShadowVisible: false }}>
+    <NavigationContainer theme={navTheme}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShadowVisible: false,
+          headerStyle: { backgroundColor: COLORS.bg },
+          headerTintColor: COLORS.text,
+          headerTitleStyle: { color: COLORS.text, fontWeight: "800" },
+          headerBackTitleVisible: false,
+        }}
+      >
         {/* NOT LOGGED IN: show auth screens */}
         {!isLoggedIn ? (
           <>
@@ -67,12 +88,6 @@ function RootNavigator() {
               component={ManageBookings}
               options={{ title: "Bookings" }}
             />
-            <Stack.Screen
-              name="Payouts"
-              component={Payouts}
-              options={{ title: "Payouts" }}
-            />
-
           </>
         ) : (
           // LOGGED IN AS ATHLETE
@@ -106,7 +121,6 @@ function RootNavigator() {
             <Stack.Screen name="MySessions" component={MySessions} />
             <Stack.Screen name="NewSession" component={NewSession} />
             <Stack.Screen name="ManageBookings" component={ManageBookings} />
-            <Stack.Screen name="Payouts" component={Payouts} />
           </>
         )}
       </Stack.Navigator>

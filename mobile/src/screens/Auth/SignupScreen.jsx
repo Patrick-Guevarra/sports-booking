@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import { signup } from "../../config/api";
 import { useRole } from "../../RoleContext";
+import { COLORS } from "../../constants/colors";
+import AppButton from "../../components/AppButton";
 
 export default function SignupScreen({ navigation }) {
   // from RoleContext
@@ -58,9 +60,12 @@ export default function SignupScreen({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, justifyContent: "center" }}>
-      <Text style={{ fontSize: 24, fontWeight: "700", marginBottom: 16 }}>
+    <View style={{ flex: 1, padding: 20, justifyContent: "center", backgroundColor: COLORS.bg }}>
+      <Text style={{ fontSize: 26, fontWeight: "800", marginBottom: 6, color: COLORS.text }}>
         Create Account
+      </Text>
+      <Text style={{ color: COLORS.muted, marginBottom: 20 }}>
+        Join as an athlete or coach to start booking or hosting sessions.
       </Text>
 
       <TextInput
@@ -72,7 +77,11 @@ export default function SignupScreen({ navigation }) {
           borderRadius: 8,
           padding: 10,
           marginBottom: 10,
+          borderColor: COLORS.border,
+          color: COLORS.text,
+          backgroundColor: COLORS.card,
         }}
+        placeholderTextColor={COLORS.muted}
       />
 
       <TextInput
@@ -86,7 +95,11 @@ export default function SignupScreen({ navigation }) {
           borderRadius: 8,
           padding: 10,
           marginBottom: 10,
+          borderColor: COLORS.border,
+          color: COLORS.text,
+          backgroundColor: COLORS.card,
         }}
+        placeholderTextColor={COLORS.muted}
       />
 
       <TextInput
@@ -99,10 +112,14 @@ export default function SignupScreen({ navigation }) {
           borderRadius: 8,
           padding: 10,
           marginBottom: 16,
+          borderColor: COLORS.border,
+          color: COLORS.text,
+          backgroundColor: COLORS.card,
         }}
+        placeholderTextColor={COLORS.muted}
       />
 
-      <Text style={{ fontWeight: "600", marginBottom: 6 }}>I am a:</Text>
+      <Text style={{ fontWeight: "600", marginBottom: 6, color: COLORS.text }}>I am a:</Text>
       <View style={{ flexDirection: "row", marginBottom: 12 }}>
         <TouchableOpacity
           onPress={() => setRoleChoice("athlete")}
@@ -112,13 +129,15 @@ export default function SignupScreen({ navigation }) {
             marginRight: 4,
             borderRadius: 8,
             borderWidth: 1,
-            backgroundColor: roleChoice === "athlete" ? "#007bff" : "#fff",
+            borderColor: COLORS.border,
+            backgroundColor: roleChoice === "athlete" ? COLORS.primary : COLORS.card,
           }}
         >
           <Text
             style={{
               textAlign: "center",
-              color: roleChoice === "athlete" ? "#fff" : "#000",
+              color: roleChoice === "athlete" ? "#0B1628" : COLORS.text,
+              fontWeight: "700",
             }}
           >
             Athlete
@@ -133,13 +152,15 @@ export default function SignupScreen({ navigation }) {
             marginLeft: 4,
             borderRadius: 8,
             borderWidth: 1,
-            backgroundColor: roleChoice === "coach" ? "#007bff" : "#fff",
+            borderColor: COLORS.border,
+            backgroundColor: roleChoice === "coach" ? COLORS.primary : COLORS.card,
           }}
         >
           <Text
             style={{
               textAlign: "center",
-              color: roleChoice === "coach" ? "#fff" : "#000",
+              color: roleChoice === "coach" ? "#0B1628" : COLORS.text,
+              fontWeight: "700",
             }}
           >
             Coach
@@ -150,28 +171,28 @@ export default function SignupScreen({ navigation }) {
       {roleChoice === "coach" && (
         <TextInput
           placeholder="Sport Specialty (e.g. Basketball)"
-          value={sportSpecialty}
-          onChangeText={setSportSpecialty}
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 10,
-            marginBottom: 16,
-          }}
-        />
+        value={sportSpecialty}
+        onChangeText={setSportSpecialty}
+        style={{
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 10,
+          marginBottom: 16,
+          borderColor: COLORS.border,
+          color: COLORS.text,
+          backgroundColor: COLORS.card,
+        }}
+        placeholderTextColor={COLORS.muted}
+      />
       )}
 
-      {loading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <Button title="Sign Up" onPress={handleSignup} />
-      )}
+      <AppButton title="Sign Up" onPress={handleSignup} loading={loading} />
 
       <TouchableOpacity
         onPress={() => navigation.navigate("Login")}
         style={{ marginTop: 16 }}
       >
-        <Text style={{ textAlign: "center", color: "#007bff" }}>
+        <Text style={{ textAlign: "center", color: COLORS.secondary, fontWeight:"600" }}>
           Already have an account? Log in
         </Text>
       </TouchableOpacity>

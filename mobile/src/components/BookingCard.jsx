@@ -13,7 +13,22 @@ const statusColor = (status) => {
 };
 
 export default function BookingCard({ item }) {
-  const date = new Date(item.startTime).toLocaleString();
+  const sport = item.sport;
+  const type = item.session_type || item.type;
+  const coachName = item.coach_name || item.coachName || "Coach";
+  const start = item.start_time || item.startTime;
+  const end = item.end_time || item.endTime;
+  const dateRaw = item.date || (item.scheduled_time ? item.scheduled_time.split(" ")[0] : null);
+  const scheduled = item.scheduled_time || item.startTime;
+  const priceCents =
+    item.priceCents ||
+    (item.price != null ? Math.round(Number(item.price) * 100) : 0);
+  const dateLabel = scheduled
+    ? new Date(scheduled).toLocaleString()
+    : dateRaw && start
+    ? `${dateRaw} ${start}-${end || ""}`
+    : "TBD";
+
   return (
     <View style={{
       backgroundColor: COLORS.card,
@@ -28,7 +43,7 @@ export default function BookingCard({ item }) {
     }}>
       <View style={{ flexDirection:'row', justifyContent:'space-between', alignItems:'center' }}>
         <Text style={{ fontWeight:'700', fontSize:16, color: COLORS.text }}>
-          {item.sport} • {niceType(item.type)}
+          {sport} • {niceType(type)}
         </Text>
         <Text style={{ color: '#fff', backgroundColor: statusColor(item.status), paddingHorizontal:10, paddingVertical:4, borderRadius:999, fontSize:12, overflow:'hidden' }}>
           {item.status}
@@ -36,11 +51,10 @@ export default function BookingCard({ item }) {
       </View>
 
       <Text style={{ color: COLORS.muted, marginTop: 6 }}>
-        Coach: <Text style={{ color: COLORS.text }}>{item.coachName}</Text>
+        Coach: <Text style={{ color: COLORS.text }}>{coachName}</Text>
       </Text>
-      <Text style={{ color: COLORS.text, marginTop: 6 }}>When: {date}</Text>
-      <Text style={{ color: COLORS.text, marginTop: 6 }}>Duration: {item.durationMinutes} min</Text>
-      <Text style={{ color: COLORS.text, marginTop: 6 }}>Price: {money(item.priceCents)}</Text>
+      <Text style={{ color: COLORS.text, marginTop: 6 }}>When: {dateLabel}</Text>
+      <Text style={{ color: COLORS.text, marginTop: 6 }}>Price: {money(priceCents)}</Text>
     </View>
   );
 }
