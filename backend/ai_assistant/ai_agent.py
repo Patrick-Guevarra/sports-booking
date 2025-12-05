@@ -1,75 +1,65 @@
 import os
-from typing import Dict, Any, Optional
+from typing import Dict
 
-import requests
+from groq import Groq
 
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
-SYSTEM_PROMPT = """
-You are an AI assistant for a sports training booking app.
+client = None
+if GROQ_API_KEY:
+    client = Groq(api_key=GROQ_API_KEY)
 
-The app currently:
-- Offers sports: basketball, soccer, tennis, track conditioning.
-- Has two session types: "one_on_one" and "group".
-- Shows coaches, prices in US dollars (e.g. $25), duration, and capacity.
-- Lets athletes browse sessions, view details, and (for now) create simulated bookings.
-- Has booking statuses: "pending", "confirmed", "canceled", "completed".
 
-Your job:
-- Answer questions about sports, sessions, pricing, booking flow, and coach options.
-- If the user asks about features we don't have, explain the current limitations.
-- Keep answers short, specific, and friendly.
-- If you're not sure, say you don't know instead of making things up.
-""".strip()
-
-def generate_ai_reply(
-    message: str,
-    role: str = "athlete",
-    context: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+def generate_ai_reply(message: str, role: str, context: str | None = None) -> Dict[str, str]:
     """
-    Call a local Ollama model and return a dict shaped like AIResponse:
-    { "reply": str, "suggestions": List[str], "meta": Dict }
+    Returns a dict: {"reply": "..."} for your FastAPI response model.
+    Uses Groq if GROQ_API_KEY is set, otherwise returns a placeholder.
     """
 
-    # Build optional context text from the context dict
-    context_text = ""
-    if context and isinstance(context, dict):
-        db_ctx = context.get("db_context")
-        if db_ctx:
-            context_text = f"\n\nAPP_CONTEXT (from database):\n{db_ctx}"
+    # If no API key, just send a dummy response (so the endpoint doesn't crash in class demos)
+    if client is None:
+        return {
+            "reply": (
+                "AI is currently disabled (no GROQ_API_KEY configured). "
+                "Please contact the developers to enable cloud AI."
+            )
+        }
 
-    user_prompt = message
-
-    full_prompt = (
-        f"{SYSTEM_PROMPT}\n\n"
-        f"User role: {role}"
-        f"{context_text}\n\n"
-        f"User: {user_prompt}"
+    system_prompt = (
+        "You are an AI assistant for a sports training booking app. "
+        "You help athletes find training sessions, ask coaches questions, and "
+        "understand booking details. Keep answers short, clear, and helpful."
     )
 
-    # Call Ollama's /api/generate endpoint (non-streaming)
-    resp = requests.post(
-        f"{OLLAMA_BASE_URL}/api/generate",
-        json={
-            "model": "llama3.2",  # or "llama3" or whatever you pulled
-            "prompt": full_prompt,
-            "stream": False,      # so we just get one JSON response
-        },
-        timeout=60,
+    # Build chat messages
+    messages = [
+        {"role": "system", "content": system_prompt},
+    ]
+
+    if context:
+        messages.append(
+            {
+                "role": "system",
+                "content": f"Here is extra context about the user or app: {context}",
+            }
+        )
+
+    # User message (you can include `role` here too if you want)
+    messages.append(
+        {
+            "role": "user",
+            "content": f"User type: {role}. Message: {message}",
+        }
     )
-    resp.raise_for_status()
-    data = resp.json()
 
-    reply_text = data.get("response", "").strip()
-    if not reply_text:
-        reply_text = "Sorry, I couldn't generate a response just now."
+    # Call Groq
+    chat_completion = client.chat.completions.create(
+        model=GROQ_MODEL,
+        messages=messages,
+        temperature=0.4,
+        max_tokens=512,
+    )
 
-    return {
-        "reply": reply_text,
-        "suggestions": [],  # you can fill these later if you want
-        "meta": {
-            "model": "llama3.2",
-            "source": "ollama",
-        },
-    }
+    reply_text = chat_completion.choices[0].message.content
+    return {"reply": reply_text}
