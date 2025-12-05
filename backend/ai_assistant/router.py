@@ -1,5 +1,5 @@
 import re
-from .intents import INTENTS
+from ai_assistant.intents import INTENTS
 
 def detect_intent(text: str) -> str:
     t = text.lower()
