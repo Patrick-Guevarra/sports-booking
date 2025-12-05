@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from pathlib import Path
 import sqlite3
 from models.schema import AIQuery, AIResponse
-from ..ai_assistant.ai_agent import generate_ai_reply
+from ai_assistant.ai_agent import generate_ai_reply
 
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
