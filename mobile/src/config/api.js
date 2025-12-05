@@ -2,7 +2,8 @@
 
 // 🔥 Backend URL (use 127.0.0.1 if you're using an Android/iOS simulator)
 export const API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  process.env.EXPO_PUBLIC_API_URL ||
+  "https://sports-booking-t0tf.onrender.com";
 
 //export const API_BASE_URL =
 //  process.env.EXPO_PUBLIC_API_URL || "http://10.0.2.2:8000";
