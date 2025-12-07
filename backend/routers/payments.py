@@ -3,6 +3,8 @@ from pydantic import BaseModel
 from pathlib import Path
 import sqlite3
 
+# Payment router simulates taking payment for a booking; no gateway integration.
+
 router = APIRouter(prefix="/payments", tags=["payments"])
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -10,6 +12,7 @@ DB_PATH = BASE_DIR / "db" / "sports_booking.db"
 
 
 def get_conn():
+    # Keep SQLite access per-request to avoid shared cursors.
     return sqlite3.connect(DB_PATH)
 
 
@@ -23,6 +26,7 @@ def pay_booking(payload: PaymentRequest):
     Simulated payment:
     - Finds an existing booking
     - Marks it confirmed
+    Used by mobile "Pay" buttons to advance booking state without real checkout.
     """
     conn = get_conn()
     cur = conn.cursor()

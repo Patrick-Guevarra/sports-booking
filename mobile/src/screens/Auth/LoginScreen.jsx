@@ -15,6 +15,7 @@ import { COLORS } from "../../constants/colors";
 import AppButton from "../../components/AppButton";
 
 export default function LoginScreen({ navigation }) {
+  // Auth screen that exchanges credentials for basic identity metadata.
   const { setRole, setUserId, setFullName, setEmail } = useRole();
 
   const [email, setEmailInput] = useState("");
@@ -22,6 +23,7 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    // Call FastAPI login and hydrate RoleContext; navigation responds automatically.
     if (!email || !password) {
       Alert.alert("Missing info", "Please enter email and password.");
       return;

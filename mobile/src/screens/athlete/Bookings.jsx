@@ -6,6 +6,7 @@ import { listBookings } from '../../config/api';
 import { useRole } from '../../RoleContext';
 
 export default function Bookings() {
+  // Athlete-only list of their bookings pulled from backend.
   const { userId, role } = useRole();
   const [data, setData] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -13,6 +14,7 @@ export default function Bookings() {
   const [error, setError] = useState(null);
 
   const load = useCallback(async () => {
+    // Fetch bookings for the logged-in athlete; handles unauthenticated cases.
     if (!userId || role !== "athlete") {
       setData([]);
       return;

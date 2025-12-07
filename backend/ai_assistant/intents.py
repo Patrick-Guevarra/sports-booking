@@ -1,3 +1,4 @@
+# Minimal intent dictionary used by detect_intent to categorize AI prompts.
 INTENTS = {
     "pricing": ["price", "cost", "how much", "fee", "expensive", "cheaper"],
     "booking_help": ["book", "schedule", "reschedule", "cancel"],

@@ -5,6 +5,7 @@ import { useRole } from "../../RoleContext";
 import { COLORS } from "../../constants/colors";
 
 export default function MySessions() {
+  // Coach-facing screen to review, close/reopen, or delete their own sessions.
   const { userId, role } = useRole();
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function MySessions() {
   const [deletingId, setDeletingId] = useState(null);
 
   const load = async () => {
+    // Pull all sessions then filter by logged-in coach ID.
     if (!userId || role !== "coach") return;
 
     setLoading(true);
@@ -32,6 +34,7 @@ export default function MySessions() {
   };
 
   const onCloseSession = async (sessionId) => {
+    // Marks a session closed to stop new bookings.
     if (!userId) return;
     setUpdating(true);
     try {
@@ -51,6 +54,7 @@ export default function MySessions() {
   };
 
   const onReopenSession = async (sessionId) => {
+    // Re-opens a session that was closed.
     if (!userId) return;
     setUpdating(true);
     try {
@@ -70,6 +74,7 @@ export default function MySessions() {
   };
 
   const onDeleteSession = async (sessionId) => {
+    // Hard delete; cascades bookings server-side. Confirmation required.
     if (!userId) return;
     Alert.alert(
       "Delete session?",

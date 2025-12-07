@@ -8,6 +8,7 @@ const COLORS = COLORS_OBJ || colorsDefault;
 
 
 export default function Chat() {
+  // Lightweight chat-like interface that proxies prompts to the AI backend.
   const [messages, setMessages] = useState([{ from:'ai', text:'Hi! Ask me about pricing, booking, or policies.' }]);
   const [input, setInput] = useState('');
   const scrollRef = useRef(null);
@@ -19,25 +20,26 @@ export default function Chat() {
   }, [messages]);
 
   const send = async () => {
-  if (!input.trim()) return;
+    // Append user message locally, then call FastAPI AI endpoint for a reply.
+    if (!input.trim()) return;
 
-  const userMessage = { from: 'you', text: input };
-  setMessages(m => [...m, userMessage]);
-  const userText = input; // save the input before clearing
-  setInput('');
+    const userMessage = { from: 'you', text: input };
+    setMessages(m => [...m, userMessage]);
+    const userText = input; // save the input before clearing
+    setInput('');
 
-  try {
-    // call FastAPI AI endpoint
-    const data = await aiQuery({ message: userText, context: {} });
+    try {
+      // call FastAPI AI endpoint
+      const data = await aiQuery({ message: userText, context: {} });
 
-    // The API returns: { reply, suggestions, meta }
-    const aiMessage = { from: 'ai', text: data.reply };
-    setMessages(m => [...m, aiMessage]);
-  } catch (err) {
-    // fallback if API call fails
-    setMessages(m => [...m, { from: 'ai', text: '⚠️ Could not reach AI service. Make sure it’s running on port 8001.' }]);
-  }
-};
+      // The API returns: { reply, suggestions, meta }
+      const aiMessage = { from: 'ai', text: data.reply };
+      setMessages(m => [...m, aiMessage]);
+    } catch (err) {
+      // fallback if API call fails
+      setMessages(m => [...m, { from: 'ai', text: '⚠️ Could not reach AI service. Make sure it’s running on port 8001.' }]);
+    }
+  };
 
   return (
     <View style={{ flex:1, padding:16, backgroundColor: COLORS.bg }}>

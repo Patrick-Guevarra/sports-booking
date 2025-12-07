@@ -3,9 +3,14 @@ from typing import Dict
 
 from groq import Groq
 
+# Thin wrapper around Groq chat completion API. Used by the AI router to keep the
+# LLM call isolated from FastAPI routing code.
+
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
+# Lazily build the Groq client if credentials are present; otherwise run in
+# "demo" mode to avoid throwing errors during class sessions.
 client = None
 if GROQ_API_KEY:
     client = Groq(api_key=GROQ_API_KEY)
@@ -38,6 +43,7 @@ def generate_ai_reply(message: str, role: str, context: str | None = None) -> Di
     ]
 
     if context:
+        # Provide structured app state (bookings, sessions, etc.) as extra system guidance.
         messages.append(
             {
                 "role": "system",

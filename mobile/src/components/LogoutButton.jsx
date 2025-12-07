@@ -3,6 +3,8 @@ import React from "react";
 import { Alert, TouchableOpacity, Text } from "react-native";
 import { useRole } from "../RoleContext";
 
+// Confirms logout and clears RoleContext so navigation resets to auth stack.
+
 export default function LogoutButton({ small = false }) {
   const { logout } = useRole();
 

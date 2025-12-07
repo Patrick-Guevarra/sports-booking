@@ -8,9 +8,14 @@ BASE_DIR = Path(__file__).resolve().parents[0]   # backend/
 DB_PATH = BASE_DIR / "db" / "sports_booking.db"
 
 def get_conn():
+    # Dedicated helper so tests/seeding use the same connection settings.
     return sqlite3.connect(DB_PATH)
 
 def seed():
+    """
+    Resets the SQLite database to a known state with a few coach/athlete accounts.
+    Passwords are intentionally short for quick mobile sign-in during demos.
+    """
     conn = get_conn()
     cur = conn.cursor()
 

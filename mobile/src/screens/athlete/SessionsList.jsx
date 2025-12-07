@@ -6,12 +6,14 @@ import { listSessions } from '../../config/api';
 import FloatingChatButton from '../../components/FloatingChatButton';
 
 export default function SessionsList({ navigation }) {
+  // Lists all open sessions athletes can browse; supports pull-to-refresh.
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const load = async () => {
+    // Fetch sessions from backend; errors are shown inline.
     setLoading(true);
     setError(null);
     try {

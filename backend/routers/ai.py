@@ -6,6 +6,8 @@ import sqlite3
 from models.schema import AIQuery, AIResponse
 from ai_assistant.ai_agent import generate_ai_reply
 
+# AI router enriches user prompts with app data before delegating to the LLM helper.
+
 router = APIRouter(prefix="/api/ai", tags=["ai"])
 
 # Reuse the same DB path pattern as sessions.py
@@ -27,7 +29,7 @@ def ai_query(payload: AIQuery):
 
     # Start from whatever context the caller may have sent (usually None)
     base_context = payload.context or {}
-    context = dict(base_context)  # copy so we don't mutate the original
+    context = dict(base_context)  # copy so we don't mutate the original object the app holds
 
     db_context_lines: list[str] = []
 
@@ -36,7 +38,7 @@ def ai_query(payload: AIQuery):
         conn = get_conn()
         cur = conn.cursor()
 
-        # 1) If we know the athlete's user_id, fetch their upcoming bookings
+        # 1) If we know the athlete's user_id, fetch their upcoming bookings to personalize guidance.
         if payload.user_id is not None:
             cur.execute(
                 """
@@ -82,7 +84,7 @@ def ai_query(payload: AIQuery):
             else:
                 db_context_lines.append("Athlete has no upcoming bookings.")
 
-        # 2) Fetch some open sessions for the athlete to choose from
+        # 2) Fetch some open sessions for the athlete to choose from as suggestions.
         cur.execute(
             """
             SELECT
@@ -134,7 +136,7 @@ def ai_query(payload: AIQuery):
     if db_context_text:
         context["db_context"] = db_context_text
 
-    # Call the AI agent with message + role + enriched context
+    # Call the AI agent with message + role + enriched context so the model can ground answers.
     result = generate_ai_reply(
         message=payload.message,
         role=payload.role,

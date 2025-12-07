@@ -36,7 +36,7 @@ const navTheme = {
 };
 
 function RootNavigator() {
-  const { role, userId } = useRole();   // we added userId earlier
+  const { role, userId } = useRole();   // pulls auth state from context
   const isLoggedIn = !!userId;
   const isCoach = role === "coach";
 
@@ -66,7 +66,7 @@ function RootNavigator() {
             />
           </>
         ) : isCoach ? (
-          // LOGGED IN AS COACH
+          // LOGGED IN AS COACH: dashboard + session management stack
           <>
             <Stack.Screen
               name="ProviderHome"
@@ -90,7 +90,7 @@ function RootNavigator() {
             />
           </>
         ) : (
-          // LOGGED IN AS ATHLETE
+          // LOGGED IN AS ATHLETE: discovery + booking + AI chat stack
           <>
             <Stack.Screen
               name="Home"

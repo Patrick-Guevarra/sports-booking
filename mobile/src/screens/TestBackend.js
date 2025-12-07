@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { request } from "../config/api"; // if exported in your api.js
 
+// Dev utility screen to verify the FastAPI server is reachable.
+
 export default function TestBackend() {
   const [msg, setMsg] = useState("Loading...");
 

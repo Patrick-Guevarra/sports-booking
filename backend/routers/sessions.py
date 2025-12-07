@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Optional, Literal
 import sqlite3
 
+# Session router is owned by coaches for CRUD over their training sessions.
+# Athletes read from these endpoints to browse availability.
+
 router = APIRouter(prefix="/sessions", tags=["sessions"])
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -12,6 +15,7 @@ DB_PATH = BASE_DIR / "db" / "sports_booking.db"
 
 
 def get_conn():
+    # One-off SQLite connection; avoids global state in async server.
     return sqlite3.connect(DB_PATH)
 
 
@@ -38,6 +42,10 @@ class SessionStatusUpdate(BaseModel):
 
 @router.post("")
 def create_session(payload: SessionCreate):
+    """
+    Coach-facing endpoint to publish a new session with pricing, capacity, and metadata.
+    Ensures the user is actually a coach before inserting.
+    """
     conn = get_conn()
     cur = conn.cursor()
 
@@ -81,6 +89,9 @@ def create_session(payload: SessionCreate):
 
 @router.get("")
 def list_sessions():
+    """
+    Public listing endpoint used by athletes to browse available training sessions.
+    """
     conn = get_conn()
     cur = conn.cursor()
 
@@ -147,6 +158,9 @@ def list_sessions():
 
 @router.patch("/{session_id}/status")
 def update_session_status(session_id: int, payload: SessionStatusUpdate):
+    """
+    Allows a coach to open/close their own session; prevents cross-account updates.
+    """
     conn = get_conn()
     cur = conn.cursor()
 

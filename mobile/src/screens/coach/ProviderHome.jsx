@@ -7,6 +7,7 @@ import colorsDefault, { COLORS as COLORS_OBJ } from "../../constants/colors";
 const COLORS = COLORS_OBJ || colorsDefault;
 
 const Card = ({ title, subtitle, onPress }) => (
+  // Small reusable card to route coaches to other dashboards.
   <TouchableOpacity
     onPress={onPress}
     activeOpacity={0.9}
@@ -28,9 +29,11 @@ const Card = ({ title, subtitle, onPress }) => (
 );
 
 export default function ProviderHome({ navigation }) {
+  // Coach landing screen linking to session creation, listings, and booking management.
   const { userId, fullName } = useRole();
 
   const goToNewSession = () => {
+    // Guard against missing identity; navigation relies on coachId param.
     if (!userId) {
       Alert.alert(
         "No coach ID",

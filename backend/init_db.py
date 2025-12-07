@@ -14,6 +14,10 @@ SCHEMA_PATH = DB_DIR / "schema.sql"
 
 
 def init_db():
+    """
+    Creates the SQLite database and applies the schema.sql script from scratch.
+    Intended for local setup/demos rather than migration management.
+    """
     print(f"Creating DB at: {DB_PATH}")
 
     # open (or create) the .db file

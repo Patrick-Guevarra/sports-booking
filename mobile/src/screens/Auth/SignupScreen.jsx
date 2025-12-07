@@ -27,6 +27,7 @@ export default function SignupScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
+    // Create the user via FastAPI and hydrate RoleContext for downstream screens.
     if (!fullName || !email || !password) {
       Alert.alert("Missing info", "Please fill in full name, email, and password.");
       return;

@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import Optional
 import sqlite3
 
+# Booking router covers creation, listing, and cancellation of training sessions.
+# All queries run against SQLite; capacity is adjusted transactionally.
+
 router = APIRouter(prefix="/bookings", tags=["bookings"])
 
 BASE_DIR = Path(__file__).resolve().parents[1]
@@ -11,6 +14,7 @@ DB_PATH = BASE_DIR / "db" / "sports_booking.db"
 
 
 def get_conn():
+    # Keep DB access simple/isolated per request.
     return sqlite3.connect(DB_PATH)
 
 
@@ -32,6 +36,10 @@ class BookingQuery(BaseModel):
 
 @router.post("")
 def create_booking(payload: BookingCreate):
+    """
+    Creates a booking for an athlete, guarding against invalid users, closed sessions,
+    and duplicate active bookings. Adjusts session capacity as part of the same write.
+    """
     conn = get_conn()
     cur = conn.cursor()
 
@@ -154,6 +162,7 @@ def list_bookings(
     cur = conn.cursor()
 
     params = []
+    # Build WHERE clause dynamically so athletes and coaches can filter independently.
     where_clause = "WHERE 1=1"
 
     if athlete_id is not None:

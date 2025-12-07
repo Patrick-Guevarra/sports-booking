@@ -2,6 +2,8 @@ import { View, Text } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { money, niceType } from '../constants/format';
 
+// Displays a booking summary for athlete/coach lists with unified formatting.
+
 const statusColor = (status) => {
   switch (status) {
     case 'confirmed': return '#10B981'; // green

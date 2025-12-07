@@ -1,5 +1,6 @@
 import { TouchableOpacity, View, Text, Platform } from 'react-native';
 
+// Floating action button that opens the AI assistant from any screen.
 export default function FloatingChatButton({ onPress }) {
   return (
     <TouchableOpacity

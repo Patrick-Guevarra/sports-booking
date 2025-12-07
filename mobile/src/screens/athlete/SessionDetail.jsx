@@ -8,6 +8,7 @@ import { useRole } from '../../RoleContext';
 import AppButton from '../../components/AppButton';
 
 export default function SessionDetail({ route, navigation }) {
+  // Shows details for a session and orchestrates booking/payment actions for athletes.
   const { sessionId, session: sessionFromList } = route.params || {};
   const [session, setSession] = useState(sessionFromList || null);
   const [loading, setLoading] = useState(!sessionFromList);
@@ -17,6 +18,7 @@ export default function SessionDetail({ route, navigation }) {
   const { userId, role } = useRole();
 
   const priceCents = useMemo(() => {
+    // Normalize price regardless of field naming from server/mock data.
     if (!session) return 0;
     if (session.price != null) return Math.round(Number(session.price) * 100);
     return session.basePriceCents || 0;
@@ -68,6 +70,7 @@ export default function SessionDetail({ route, navigation }) {
   }
 
   const onBook = async () => {
+    // Create a pending booking and persist it server-side.
     if (role !== "athlete") {
       Alert.alert("Only athletes can book sessions.");
       return;
@@ -104,6 +107,7 @@ export default function SessionDetail({ route, navigation }) {
   };
 
   const onPay = async () => {
+    // Simulates checkout by marking booking confirmed in backend.
     if (!booking?.booking_id) {
       Alert.alert("Book the session first to get a booking ID.");
       return;
@@ -127,6 +131,7 @@ export default function SessionDetail({ route, navigation }) {
   };
 
   const refreshBooking = async () => {
+    // Pull the latest booking status for this session to avoid stale UI.
     if (!userId || !sessionId) return;
     try {
       const rows = await listBookings({
@@ -149,6 +154,7 @@ export default function SessionDetail({ route, navigation }) {
   }, [userId, sessionId]);
 
   const onCancel = async () => {
+    // Cancel booking and restore capacity in backend.
     if (!booking?.booking_id) return;
     try {
       await cancelBooking({ bookingId: booking.booking_id, athleteId: Number(userId) });

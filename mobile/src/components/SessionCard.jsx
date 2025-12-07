@@ -2,6 +2,8 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { money, niceType } from '../constants/format';
 
+// Card used in session lists to preview sport, coach, and pricing before drilling in.
+
 export default function SessionCard({ item, onPress }) {
   const sessionType = item.session_type || item.type || "";
   const coachName = item.coach_name || item.coachName || "Coach";

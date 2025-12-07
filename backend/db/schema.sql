@@ -1,4 +1,5 @@
 -- backend/db/schema.sql
+-- Defines Users, Sessions, and Bookings tables for the demo booking backend.
 
 DROP TABLE IF EXISTS Bookings;
 DROP TABLE IF EXISTS Sessions;

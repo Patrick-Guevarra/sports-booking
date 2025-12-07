@@ -12,6 +12,7 @@ const Pill = ({ label, bg }) => (
 );
 
 export default function ManageBookings() {
+  // Coach view of bookings for their sessions; read-only summary list.
   const { userId, role } = useRole();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export default function ManageBookings() {
   const [error, setError] = useState(null);
 
   const load = useCallback(async () => {
+    // Fetch bookings owned by the coach; handle missing auth gracefully.
     if (!userId || role !== "coach") {
       setData([]);
       return;
@@ -48,6 +50,7 @@ export default function ManageBookings() {
   }, [load]);
 
   const statusColor = (s) => {
+    // Map booking status to pill color for quick scanning.
     if (s === 'confirmed') return '#10B981';
     if (s === 'pending') return '#F59E0B';
     if (s === 'completed') return '#6B7280';

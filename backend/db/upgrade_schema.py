@@ -4,6 +4,7 @@ import sqlite3
 BASE_DIR = Path(__file__).resolve().parents[1]
 DB_PATH = BASE_DIR / "db" / "sports_booking.db"
 
+# One-off migration helper to add new columns when schema.sql changes.
 conn = sqlite3.connect(DB_PATH)
 cur = conn.cursor()
 

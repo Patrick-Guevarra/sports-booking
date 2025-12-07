@@ -14,6 +14,7 @@ import { COLORS } from "../../constants/colors";
 import AppButton from "../../components/AppButton";
 
 export default function NewSession({ navigation }) {
+  // Form for coaches to publish new training sessions to the backend.
   const { role, userId } = useRole();
 
   const [sport, setSport] = useState("");
@@ -29,6 +30,7 @@ export default function NewSession({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handlePublish = async () => {
+    // Validate form fields, then POST to FastAPI to create the session.
     if (role !== "coach") {
       Alert.alert("Not allowed", "Only coaches can create sessions.");
       return;

@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 
+# Pydantic models used by the AI router to validate request/response payloads.
+
 class AIQuery(BaseModel):
     message: str
     user_id: Optional[str] = None

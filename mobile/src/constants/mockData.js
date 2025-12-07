@@ -1,3 +1,4 @@
+// Legacy sample data used before wiring to the FastAPI backend.
 export const MOCK_SESSIONS = [
   {
     id: 1,
@@ -51,4 +52,3 @@ export const MOCK_BOOKINGS = [
     status: 'pending'
   }
 ];
-

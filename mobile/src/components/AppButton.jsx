@@ -2,6 +2,8 @@ import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { COLORS } from "../constants/colors";
 
+// Reusable button that supports variant styling and loading state for form actions.
+
 export default function AppButton({
   title,
   onPress,

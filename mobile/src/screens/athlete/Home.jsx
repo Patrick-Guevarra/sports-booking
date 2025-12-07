@@ -5,6 +5,7 @@ import FloatingChatButton from '../../components/FloatingChatButton';
 import LogoutButton from '../../components/LogoutButton';
 
 export default function Home({ navigation }) {
+  // Landing screen for athletes; funnels to session discovery or bookings.
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: COLORS.bg }}>
       <Text style={{ fontSize: 26, fontWeight: '800', color: COLORS.text, marginBottom: 4 }}>
